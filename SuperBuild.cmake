@@ -10,7 +10,8 @@ macro(sb_add_project _name )
   option(BUILD_${_name} "Build subproject ${_name}" TRUE)
 
   set(oneValueArgs CVS_REPOSITORY GIT_REPOSITORY SVN_REPOSITORY SOURCE_DIR )
-  cmake_parse_arguments(_SB "" "${oneValueArgs}" ""  ${ARGN})
+  set(multiValueArgs DEPENDS)
+  cmake_parse_arguments(_SB "" "${oneValueArgs}" "${multiValueArgs}"  ${ARGN})
 
   if(EXISTS ${CMAKE_SOURCE_DIR}/${_name}/src/ ) # we are building an installed version of the source package
     set(GET_SOURCES_ARGS SOURCE_DIR ${CMAKE_SOURCE_DIR}/${_name}/src/${_name}
@@ -32,6 +33,26 @@ macro(sb_add_project _name )
 
   if (BUILD_${_name})
     message(STATUS "Adding project ${_name}")
+
+    set(DEPENDS_ARGS)
+    if(_SB_DEPENDS)
+      set(existingDepends)
+
+      foreach(dep ${_SB_DEPENDS})
+        if(TARGET ${dep})
+          list(APPEND existingDepends ${dep} )
+        else()
+          message(STATUS "HINT: ${_name}: Dependency ${dep} is disabled, trying to use system one.")
+        endif()
+      endforeach(dep)
+
+      if(existingDepends)
+        set(DEPENDS_ARGS DEPENDS ${existingDepends} )
+      endif()
+
+      set(DEPEND_ARGS DEPENDS ${_SB_DEPENDS} )
+    endif()
+
     externalproject_add(${_name}
                         ${_SB_UNPARSED_ARGUMENTS}
 #                        PREFIX ${_name}
@@ -43,6 +64,7 @@ macro(sb_add_project _name )
 #                        INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} -C${CMAKE_BINARY_DIR}/${_name}/build install DESTDIR=${CMAKE_BINARY_DIR}/Install
                         CMAKE_ARGS -DQT_QMAKE_EXECUTABLE=${QT_QMAKE_EXECUTABLE} -DCMAKE_PREFIX_PATH=${CMAKE_INSTALL_PREFIX} -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
                         STEP_TARGETS update
+                        ${DEPENDS_ARGS}
                         )
 #    externalproject_add_step(${_name}  package
 #                             COMMAND  ${CMAKE_MAKE_PROGRAM} package
@@ -55,8 +77,7 @@ macro(sb_add_project _name )
     add_dependencies(UpdateAll ${_name}-update )
 #    add_dependencies(PackageAll ${_name}-package )
   else()
-    message(STATUS "Skipping project ${_name}")
-    add_custom_target(${_name})
+    message(STATUS "Skipping ${_name}")
   endif()
 endmacro(sb_add_project)
 
