@@ -86,7 +86,11 @@ macro(sb_add_project _name )
 #                             DEPENDEES build)
 #
 #    externalProject_Add_StepTargets(${_name} package)
-    install(DIRECTORY ${CMAKE_BINARY_DIR}/Source/${_name} DESTINATION Source )
+    if(buildFromSourcePackage)
+      install(DIRECTORY ${CMAKE_SOURCE_DIR}/${_name} DESTINATION Source )
+    else()
+      install(DIRECTORY ${CMAKE_BINARY_DIR}/Source/${_name} DESTINATION Source )
+    endif()
 
     add_dependencies(UpdateAll ${_name}-update )
 #    add_dependencies(PackageAll ${_name}-package )
