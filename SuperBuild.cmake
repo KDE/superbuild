@@ -6,6 +6,8 @@ add_custom_target(PackageAll)
 include(ExternalProject)
 include(CMakeParseArguments)
 
+set(SB_GIT_TAG "master" CACHE STRING "The git tag to use for cloning")
+
 macro(sb_add_project _name )
   option(BUILD_${_name} "Build subproject ${_name}" TRUE)
 
@@ -22,7 +24,7 @@ macro(sb_add_project _name )
     if(_SB_CVS_REPOSITORY)
       set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} CVS_REPOSITORY ${_SB_CVS_REPOSITORY} )
     elseif(_SB_GIT_REPOSITORY)
-      set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} GIT_REPOSITORY ${_SB_GIT_REPOSITORY} SOURCE_DIR ${CMAKE_BINARY_DIR}/src/${_name})
+      set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} GIT_REPOSITORY ${_SB_GIT_REPOSITORY} GIT_TAG ${SB_GIT_TAG} SOURCE_DIR ${CMAKE_BINARY_DIR}/src/${_name})
     elseif(_SB_SVN_REPOSITORY)
       set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} SVN_REPOSITORY ${_SB_SVN_REPOSITORY} )
     elseif(_SB_SOURCE_DIR)
