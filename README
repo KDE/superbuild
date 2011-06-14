@@ -1,0 +1,7 @@
+
+To find out the dependencies between the projects in a superbuild,
+the following command prints all find_package() calls in the subprojects.
+This should give good enough information about the dependencies:
+$ find . -name \*cmake -o -name \*txt -exec grep -H -i find_package \{\} \;
+
+

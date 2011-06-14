@@ -71,8 +71,8 @@ macro(sb_add_project _name )
     externalproject_add(${_name}
                         ${_SB_UNPARSED_ARGUMENTS}
                         ${GET_SOURCES_ARGS}
-#                        TMP_DIR ${CMAKE_BINARY_DIR}/tmpfiles/${_name}
-#                        STAMP_DIR ${CMAKE_BINARY_DIR}/stampfiles/${_name}
+                        TMP_DIR ${CMAKE_BINARY_DIR}/CMakeFiles/SuperBuild/tmpfiles/${_name}
+                        STAMP_DIR ${CMAKE_BINARY_DIR}/CMakeFiles/SuperBuild/stampfiles/${_name}
 #                        BINARY_DIR ${CMAKE_BINARY_DIR}/build/${_name}
                         INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
 #                        INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} -C${CMAKE_BINARY_DIR}/${_name}/build install DESTDIR=${CMAKE_BINARY_DIR}/Install
