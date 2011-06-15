@@ -126,7 +126,11 @@ macro(sb_add_project _name )
     if(buildFromSourcePackage)
       install(DIRECTORY ${CMAKE_SOURCE_DIR}/${_name} DESTINATION Source )
     else()
-      install(DIRECTORY ${CMAKE_BINARY_DIR}/Source/${_name} DESTINATION Source )
+      install(DIRECTORY ${CMAKE_BINARY_DIR}/Source/${_name} DESTINATION Source
+              PATTERN .git EXCLUDE
+              PATTERN .svn EXCLUDE
+              PATTERN CVS EXCLUDE
+             )
       add_dependencies(UpdateAll ${_name}-update )
     endif()
 
