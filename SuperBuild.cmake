@@ -1,5 +1,15 @@
+# are we building a source package or should we download from the internet ?
+if(EXISTS ${CMAKE_SOURCE_DIR}/ThisIsASourcePackage.valid ) # we are building an installed version of the source package
+  set(buildFromSourcePackage TRUE)
+else()
+  set(buildFromSourcePackage FALSE)
+endif()
 
-add_custom_target(UpdateAll)
+
+if (NOT buildFromSourcePackage)
+  add_custom_target(UpdateAll)
+endif()
+
 #add_custom_target(PackageAll)
 
 
@@ -41,12 +51,6 @@ set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 
 
 macro(sb_add_project _name )
-
-  if(EXISTS ${CMAKE_SOURCE_DIR}/ThisIsASourcePackage.valid ) # we are building an installed version of the source package
-    set(buildFromSourcePackage TRUE)
-  else()
-    set(buildFromSourcePackage FALSE)
-  endif()
 
   if(EXISTS ${CMAKE_SOURCE_DIR}/${_name}  OR NOT buildFromSourcePackage)
     option(BUILD_${_name} "Build subproject ${_name}" TRUE)
@@ -123,9 +127,9 @@ macro(sb_add_project _name )
       install(DIRECTORY ${CMAKE_SOURCE_DIR}/${_name} DESTINATION Source )
     else()
       install(DIRECTORY ${CMAKE_BINARY_DIR}/Source/${_name} DESTINATION Source )
+      add_dependencies(UpdateAll ${_name}-update )
     endif()
 
-    add_dependencies(UpdateAll ${_name}-update )
 #    add_dependencies(PackageAll ${_name}-package )
   else()
     message(STATUS "Skipping ${_name}")
