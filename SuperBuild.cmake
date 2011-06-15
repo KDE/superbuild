@@ -1,16 +1,44 @@
 
 add_custom_target(UpdateAll)
-add_custom_target(PackageAll)
+#add_custom_target(PackageAll)
 
 
 include(ExternalProject)
 include(CMakeParseArguments)
 
-set(SB_GIT_TAG "master" CACHE STRING "The git tag to use for cloning")
+set(SB_GIT_TAG "master" CACHE STRING "The git tag to use for cloning.")
+
+set(SB_PACKAGE_VERSION_NUMBER "0.0.1" CACHE STRING "The version number for the source package.")
+
+
+
+# Try to handle DESTDIR.
+# We install during the build, and if DESTDIR is set, the install will go there.
+# Installed libs have to be found in DESTDIR, so prepend it to CMAKE_PREFIX_PATH.
+# If RPATH is used, this messes everything up, since the using binary will have the RPATH set to
+# the library inside DESTDIR, which is wrong.
+# So, only allow DESTDIR if RPATH is completely disabled using CMAKE_SKIP_RPATH.
+set(_tmpDest "$ENV{DESTDIR}")
+
+if(NOT DEFINED SB_INITIAL_DESTDIR)
+  # initial cmake run, check DESTDIR
+  set(SB_INITIAL_DESTDIR ${_tmpDest} CACHE STRING "The DESTDIR environment variable during the initial cmake run" FORCE)
+  mark_as_advanced(SB_INITIAL_DESTDIR)
+else()
+  if(NOT "${SB_INITIAL_DESTDIR}" STREQUAL "${_tmpDest}")
+    message(FATAL_ERROR "Your DESTDIR environment variable changed. In a Superbuild, DESTDIR must always stay the same as it was during the initial cmake run. Initially it was \"${SB_INITIAL_DESTDIR}\", now it is \"${_tmpDest}\" .")
+  endif()
+endif()
+
+if(SB_INITIAL_DESTDIR AND NOT CMAKE_SKIP_RPATH)
+  message(FATAL_ERROR "The DESTDIR environment variable is set to \"${SB_INITIAL_DESTDIR}\", but CMAKE_SKIP_RPATH is not set to TRUE. This would produce binaries with bad RPATHs. ")
+endif()
+
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
              PROPERTY EP_BASE ${CMAKE_CURRENT_BINARY_DIR}
             )
+
 
 macro(sb_add_project _name )
 
@@ -76,7 +104,7 @@ macro(sb_add_project _name )
 #                        BINARY_DIR ${CMAKE_BINARY_DIR}/build/${_name}
                         INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
 #                        INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} -C${CMAKE_BINARY_DIR}/${_name}/build install DESTDIR=${CMAKE_BINARY_DIR}/Install
-                        CMAKE_ARGS -DQT_QMAKE_EXECUTABLE=${QT_QMAKE_EXECUTABLE} -DCMAKE_PREFIX_PATH=${CMAKE_INSTALL_PREFIX} -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+                        CMAKE_ARGS -DQT_QMAKE_EXECUTABLE=${QT_QMAKE_EXECUTABLE} -DCMAKE_PREFIX_PATH=${SB_INITIAL_DESTDIR}${CMAKE_INSTALL_PREFIX} -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} -DCMAKE_SKIP_RPATH="${CMAKE_SKIP_RPATH}"
                         STEP_TARGETS update
                         ${DEPENDS_ARGS}
                         )
@@ -104,6 +132,7 @@ macro(sb_add_project _name )
                     OUTPUT_QUIET ERROR_QUIET )
   endif()
 endmacro(sb_add_project)
+
 
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/ThisIsASourcePackage "This is a generated source package.")
 
