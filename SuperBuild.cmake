@@ -104,7 +104,12 @@ macro(sb_add_project _name )
 #                        BINARY_DIR ${CMAKE_BINARY_DIR}/build/${_name}
                         INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
 #                        INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} -C${CMAKE_BINARY_DIR}/${_name}/build install DESTDIR=${CMAKE_BINARY_DIR}/Install
-                        CMAKE_ARGS -DQT_QMAKE_EXECUTABLE=${QT_QMAKE_EXECUTABLE} -DCMAKE_PREFIX_PATH=${SB_INITIAL_DESTDIR}${CMAKE_INSTALL_PREFIX} -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} -DCMAKE_SKIP_RPATH="${CMAKE_SKIP_RPATH}"
+                        CMAKE_ARGS -DQT_QMAKE_EXECUTABLE=${QT_QMAKE_EXECUTABLE}
+                                   -DCMAKE_PREFIX_PATH=${SB_INITIAL_DESTDIR}${CMAKE_INSTALL_PREFIX}
+                                   -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+                                   -DCMAKE_SKIP_RPATH="${CMAKE_SKIP_RPATH}"
+                                   -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+                                   -DLIB_SUFFIX=${LIB_SUFFIX}
                         STEP_TARGETS update
                         ${DEPENDS_ARGS}
                         )
