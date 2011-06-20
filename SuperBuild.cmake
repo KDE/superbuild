@@ -1,3 +1,23 @@
+# This part is for checking at buildtime whether DESTDIR still is the same.
+# It is executed by cmake in script mode via the AlwaysCheckDESTDIR custom target.
+if(_SB_CHECK_DESTDIR)
+  set(_tmpDest "$ENV{DESTDIR}")
+  if(NOT "${SB_INITIAL_DESTDIR}" STREQUAL "${_tmpDest}")
+    message(FATAL_ERROR "DESTDIR changed. This is not supported in Superbuilds, DESTDIR must always be the same at CMake and build time. (now: \"${_tmpDest}\", at CMake time: \"${SB_INITIAL_DESTDIR}\")")
+  else()
+    message("DESTDIR Ok. (now: \"${_tmpDest}\", at CMake time: \"${SB_INITIAL_DESTDIR}\")")
+  endif()
+  return()
+endif()
+
+# This custom target is used to check at buildtime whether DESTDIR is still the same as at CMake time.
+add_custom_target(AlwaysCheckDESTDIR COMMAND ${CMAKE_COMMAND} -DSB_INITIAL_DESTDIR="${SB_INITIAL_DESTDIR}" -D_SB_CHECK_DESTDIR=TRUE -P ${CMAKE_CURRENT_LIST_FILE} )
+
+
+#####################################################################################
+
+# Now the actual CMakeLists.txt starts.
+
 # are we building a source package or should we download from the internet ?
 if(EXISTS ${CMAKE_SOURCE_DIR}/ThisIsASourcePackage.valid ) # we are building an installed version of the source package
   set(buildFromSourcePackage TRUE)
@@ -141,6 +161,7 @@ macro(sb_add_project _name )
     endif()
 
 #    add_dependencies(PackageAll ${_name}-package )
+    add_dependencies(${_name} AlwaysCheckDESTDIR)
   else()
     message(STATUS "Skipping ${_name}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/Build/${_name}
