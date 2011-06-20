@@ -40,8 +40,14 @@ else()
   endif()
 endif()
 
-if(SB_INITIAL_DESTDIR AND NOT CMAKE_SKIP_RPATH)
-  message(FATAL_ERROR "The DESTDIR environment variable is set to \"${SB_INITIAL_DESTDIR}\", but CMAKE_SKIP_RPATH is not set to TRUE. This would produce binaries with bad RPATHs. ")
+if(SB_INITIAL_DESTDIR)
+  if( NOT CMAKE_SKIP_RPATH)
+    message(FATAL_ERROR "The DESTDIR environment variable is set to \"${SB_INITIAL_DESTDIR}\", but CMAKE_SKIP_RPATH is not set to TRUE. This would produce binaries with bad RPATHs. ")
+  endif()
+
+  if(NOT IS_ABSOLUTE "${SB_INITIAL_DESTDIR}")
+    message(FATAL_ERROR "The DESTDIR environment variable is set to \"${SB_INITIAL_DESTDIR}\", but relative DESTDIR is not support in a Superbuild. Set it to an absolute path")
+  endif()
 endif()
 
 
