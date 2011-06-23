@@ -36,11 +36,14 @@ endif()
 include(ExternalProject)
 include(CMakeParseArguments)
 
-set(SB_GIT_TAG "master" CACHE STRING "The git tag to use for cloning.")
+# This is the git tag from which will be cloned. It is in the cache so it can be modified for releases etc.
+# It can be overriden for each subproject by providing a SB_GIT_TAG_<ProjectName> variable.
+set(SB_GIT_TAG "master" CACHE STRING "The default git tag to use for cloning all subprojects. It can be overridden for each subproject by providing a SB_GIT_TAG_<ProjectName> variable.")
 
 set(SB_PACKAGE_VERSION_NUMBER "0.0.1" CACHE STRING "The version number for the source package.")
 
 
+include(SuperBuildOptions.cmake OPTIONAL)
 
 # Try to handle DESTDIR.
 # We install during the build, and if DESTDIR is set, the install will go there.
@@ -71,6 +74,7 @@ if(SB_INITIAL_DESTDIR)
 endif()
 
 
+# set up directory structure to use for the ExternalProjects
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
              PROPERTY EP_BASE ${CMAKE_CURRENT_BINARY_DIR}
             )
@@ -98,7 +102,14 @@ macro(sb_add_project _name )
       if(_SB_CVS_REPOSITORY)
         set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} CVS_REPOSITORY ${_SB_CVS_REPOSITORY} )
       elseif(_SB_GIT_REPOSITORY)
-        set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} GIT_REPOSITORY ${_SB_GIT_REPOSITORY} GIT_TAG ${SB_GIT_TAG} )
+
+        # make it possible to override the "global" SB_GIT_TAG with a per-subproject SB_GIT_TAG_ProjectName
+        set(_SB_GIT_TAG ${SB_GIT_TAG} )
+        if (SB_GIT_TAG_${_name})
+          set(_SB_GIT_TAG ${SB_GIT_TAG_${_name}})
+        endif()
+
+        set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} GIT_REPOSITORY ${_SB_GIT_REPOSITORY} GIT_TAG ${_SB_GIT_TAG} )
       elseif(_SB_SVN_REPOSITORY)
         set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} SVN_REPOSITORY ${_SB_SVN_REPOSITORY} )
       elseif(_SB_SOURCE_DIR)
