@@ -32,9 +32,12 @@ endif()
 
 #add_custom_target(PackageAll)
 
-
 include(ExternalProject)
 include(CMakeParseArguments)
+
+
+set(SB_ONE_PACKAGE_PER_PROJECT FALSE CACHE BOOL "If FALSE, \"make package\" will create one big source tarball. If TRUE, \"make package\" will create one tarball for each subproject.")
+set(CPACK_ARCHIVE_COMPONENT_INSTALL ${SB_ONE_PACKAGE_PER_PROJECT})
 
 # This is the git tag from which will be cloned. It is in the cache so it can be modified for releases etc.
 # It can be overriden for each subproject by providing a SB_GIT_TAG_<ProjectName> variable.
@@ -166,9 +169,9 @@ macro(sb_add_project _name )
 #
 #    externalProject_Add_StepTargets(${_name} package)
     if(buildFromSourcePackage)
-      install(DIRECTORY ${CMAKE_SOURCE_DIR}/${_name} DESTINATION Source )
+      install(DIRECTORY ${CMAKE_SOURCE_DIR}/${_name}  DESTINATION Source  COMPONENT ${_name} )
     else()
-      install(DIRECTORY ${CMAKE_BINARY_DIR}/Source/${_name} DESTINATION Source
+      install(DIRECTORY ${CMAKE_BINARY_DIR}/Source/${_name}  DESTINATION Source  COMPONENT ${_name}
               PATTERN .git EXCLUDE
               PATTERN .svn EXCLUDE
               PATTERN CVS EXCLUDE
