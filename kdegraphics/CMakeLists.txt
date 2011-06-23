@@ -32,6 +32,7 @@ sb_add_project(KDEGraphicsStrigiAnalyzer GIT_REPOSITORY git://anongit.kde.org/kd
 
 set(CPACK_PACKAGE_VERSION ${SB_PACKAGE_VERSION_NUMBER})
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME} )
+set(CPACK_SYSTEM_NAME "src")
 set(CPACK_GENERATOR "TGZ")
 set(CPACK_SET_DESTDIR FALSE)
 
