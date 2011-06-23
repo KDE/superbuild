@@ -195,8 +195,8 @@ endmacro(sb_add_project)
 
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/ThisIsASourcePackage.in "This is a generated source package.")
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ThisIsASourcePackage.in DESTINATION Source RENAME ThisIsASourcePackage.valid )
-install(FILES CMakeLists.txt DESTINATION Source )
-install(FILES ${CMAKE_CURRENT_LIST_FILE} DESTINATION . )
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ThisIsASourcePackage.in DESTINATION Source RENAME ThisIsASourcePackage.valid  COMPONENT SuperBuild )
+install(FILES CMakeLists.txt DESTINATION Source  COMPONENT SuperBuild )
+install(FILES ${CMAKE_CURRENT_LIST_FILE} DESTINATION .  COMPONENT SuperBuild )
 
 set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY TRUE)
