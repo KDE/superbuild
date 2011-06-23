@@ -193,9 +193,9 @@ macro(sb_add_project _name )
 endmacro(sb_add_project)
 
 
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/ThisIsASourcePackage "This is a generated source package.")
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/ThisIsASourcePackage.in "This is a generated source package.")
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ThisIsASourcePackage DESTINATION Source RENAME ThisIsASourcePackage.valid )
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ThisIsASourcePackage.in DESTINATION Source RENAME ThisIsASourcePackage.valid )
 install(FILES CMakeLists.txt DESTINATION Source )
 install(FILES ${CMAKE_CURRENT_LIST_FILE} DESTINATION . )
 
