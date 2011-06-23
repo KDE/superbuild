@@ -42,6 +42,8 @@ set(SB_GIT_TAG "master" CACHE STRING "The default git tag to use for cloning all
 
 set(SB_PACKAGE_VERSION_NUMBER "0.0.1" CACHE STRING "The version number for the source package.")
 
+set(SB_CMAKE_ARGS "" CACHE STRING "Additional arguments to CMake which will be used for all subprojects (e.g. \"-DFOO=Bar\"). For per-project arguments variables SB_CMAKE_ARGS_<ProjectName> can be defined.")
+
 
 include(SuperBuildOptions.cmake OPTIONAL)
 
@@ -145,13 +147,16 @@ macro(sb_add_project _name )
 #                        BINARY_DIR ${CMAKE_BINARY_DIR}/build/${_name}
                         INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
 #                        INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} -C${CMAKE_BINARY_DIR}/${_name}/build install DESTDIR=${CMAKE_BINARY_DIR}/Install
-                        CMAKE_ARGS -DQT_QMAKE_EXECUTABLE=${QT_QMAKE_EXECUTABLE}
+                        CMAKE_ARGS --no-warn-unused-cli
+                                   -DQT_QMAKE_EXECUTABLE=${QT_QMAKE_EXECUTABLE}
                                    -DCMAKE_PREFIX_PATH=${SB_INITIAL_DESTDIR}${CMAKE_INSTALL_PREFIX}
                                    -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
                                    -DCMAKE_SKIP_RPATH="${CMAKE_SKIP_RPATH}"
                                    -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
                                    -DLIB_SUFFIX=${LIB_SUFFIX}
-                        STEP_TARGETS update
+                                   ${SB_CMAKE_ARGS}
+                                   ${SB_CMAKE_ARGS_${_name}}
+                        STEP_TARGETS update configure
                         ${DEPENDS_ARGS}
                         )
 #    externalproject_add_step(${_name}  package
