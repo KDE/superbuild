@@ -168,10 +168,16 @@ macro(sb_add_project _name )
 #                             DEPENDEES build)
 #
 #    externalProject_Add_StepTargets(${_name} package)
-    if(buildFromSourcePackage)
-      install(DIRECTORY ${CMAKE_SOURCE_DIR}/${_name}  DESTINATION Source  COMPONENT ${_name} )
+    if(SB_ONE_PACKAGE_PER_PROJECT)
+      set(SRC_INSTALL_DIR ".")
     else()
-      install(DIRECTORY ${CMAKE_BINARY_DIR}/Source/${_name}  DESTINATION Source  COMPONENT ${_name}
+      set(SRC_INSTALL_DIR "Source")
+    endif()
+
+    if(buildFromSourcePackage)
+      install(DIRECTORY ${CMAKE_SOURCE_DIR}/${_name}  DESTINATION ${SRC_INSTALL_DIR}  COMPONENT ${_name} )
+    else()
+      install(DIRECTORY ${CMAKE_BINARY_DIR}/Source/${_name}  DESTINATION ${SRC_INSTALL_DIR}  COMPONENT ${_name}
               PATTERN .git EXCLUDE
               PATTERN .svn EXCLUDE
               PATTERN CVS EXCLUDE
