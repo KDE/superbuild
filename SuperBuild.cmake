@@ -1,3 +1,23 @@
+# This part is for checking at buildtime whether DESTDIR still is the same.
+# It is executed by cmake in script mode via the AlwaysCheckDESTDIR custom target.
+if(_SB_CHECK_DESTDIR)
+  set(_tmpDest "$ENV{DESTDIR}")
+  if(NOT "${SB_INITIAL_DESTDIR}" STREQUAL "${_tmpDest}")
+    message(FATAL_ERROR "DESTDIR changed. This is not supported in Superbuilds, DESTDIR must always be the same at CMake and build time. (now: \"${_tmpDest}\", at CMake time: \"${SB_INITIAL_DESTDIR}\")")
+  else()
+    message("DESTDIR Ok. (now: \"${_tmpDest}\", at CMake time: \"${SB_INITIAL_DESTDIR}\")")
+  endif()
+  return()
+endif()
+
+# This custom target is used to check at buildtime whether DESTDIR is still the same as at CMake time.
+add_custom_target(AlwaysCheckDESTDIR COMMAND ${CMAKE_COMMAND} -DSB_INITIAL_DESTDIR="${SB_INITIAL_DESTDIR}" -D_SB_CHECK_DESTDIR=TRUE -P ${CMAKE_CURRENT_LIST_FILE} )
+
+
+#####################################################################################
+
+# Now the actual CMakeLists.txt starts.
+
 # are we building a source package or should we download from the internet ?
 if(EXISTS ${CMAKE_SOURCE_DIR}/ThisIsASourcePackage.valid ) # we are building an installed version of the source package
   set(buildFromSourcePackage TRUE)
@@ -12,15 +32,23 @@ endif()
 
 #add_custom_target(PackageAll)
 
-
 include(ExternalProject)
 include(CMakeParseArguments)
 
-set(SB_GIT_TAG "master" CACHE STRING "The git tag to use for cloning.")
+
+set(SB_ONE_PACKAGE_PER_PROJECT FALSE CACHE BOOL "If FALSE, \"make package\" will create one big source tarball. If TRUE, \"make package\" will create one tarball for each subproject.")
+set(CPACK_ARCHIVE_COMPONENT_INSTALL ${SB_ONE_PACKAGE_PER_PROJECT})
+
+# This is the git tag from which will be cloned. It is in the cache so it can be modified for releases etc.
+# It can be overriden for each subproject by providing a SB_GIT_TAG_<ProjectName> variable.
+set(SB_GIT_TAG "master" CACHE STRING "The default git tag to use for cloning all subprojects. It can be overridden for each subproject by providing a SB_GIT_TAG_<ProjectName> variable.")
 
 set(SB_PACKAGE_VERSION_NUMBER "0.0.1" CACHE STRING "The version number for the source package.")
 
+set(SB_CMAKE_ARGS "" CACHE STRING "Additional arguments to CMake which will be used for all subprojects (e.g. \"-DFOO=Bar\"). For per-project arguments variables SB_CMAKE_ARGS_<ProjectName> can be defined.")
 
+
+include(SuperBuildOptions.cmake OPTIONAL)
 
 # Try to handle DESTDIR.
 # We install during the build, and if DESTDIR is set, the install will go there.
@@ -40,11 +68,18 @@ else()
   endif()
 endif()
 
-if(SB_INITIAL_DESTDIR AND NOT CMAKE_SKIP_RPATH)
-  message(FATAL_ERROR "The DESTDIR environment variable is set to \"${SB_INITIAL_DESTDIR}\", but CMAKE_SKIP_RPATH is not set to TRUE. This would produce binaries with bad RPATHs. ")
+if(SB_INITIAL_DESTDIR)
+  if( NOT CMAKE_SKIP_RPATH)
+    message(FATAL_ERROR "The DESTDIR environment variable is set to \"${SB_INITIAL_DESTDIR}\", but CMAKE_SKIP_RPATH is not set to TRUE. This would produce binaries with bad RPATHs. ")
+  endif()
+
+  if(NOT IS_ABSOLUTE "${SB_INITIAL_DESTDIR}")
+    message(FATAL_ERROR "The DESTDIR environment variable is set to \"${SB_INITIAL_DESTDIR}\", but relative DESTDIR is not support in a Superbuild. Set it to an absolute path")
+  endif()
 endif()
 
 
+# set up directory structure to use for the ExternalProjects
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
              PROPERTY EP_BASE ${CMAKE_CURRENT_BINARY_DIR}
             )
@@ -72,7 +107,14 @@ macro(sb_add_project _name )
       if(_SB_CVS_REPOSITORY)
         set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} CVS_REPOSITORY ${_SB_CVS_REPOSITORY} )
       elseif(_SB_GIT_REPOSITORY)
-        set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} GIT_REPOSITORY ${_SB_GIT_REPOSITORY} GIT_TAG ${SB_GIT_TAG} )
+
+        # make it possible to override the "global" SB_GIT_TAG with a per-subproject SB_GIT_TAG_ProjectName
+        set(_SB_GIT_TAG ${SB_GIT_TAG} )
+        if (SB_GIT_TAG_${_name})
+          set(_SB_GIT_TAG ${SB_GIT_TAG_${_name}})
+        endif()
+
+        set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} GIT_REPOSITORY ${_SB_GIT_REPOSITORY} GIT_TAG ${_SB_GIT_TAG} )
       elseif(_SB_SVN_REPOSITORY)
         set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} SVN_REPOSITORY ${_SB_SVN_REPOSITORY} )
       elseif(_SB_SOURCE_DIR)
@@ -108,13 +150,16 @@ macro(sb_add_project _name )
 #                        BINARY_DIR ${CMAKE_BINARY_DIR}/build/${_name}
                         INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
 #                        INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} -C${CMAKE_BINARY_DIR}/${_name}/build install DESTDIR=${CMAKE_BINARY_DIR}/Install
-                        CMAKE_ARGS -DQT_QMAKE_EXECUTABLE=${QT_QMAKE_EXECUTABLE}
+                        CMAKE_ARGS --no-warn-unused-cli
+                                   -DQT_QMAKE_EXECUTABLE=${QT_QMAKE_EXECUTABLE}
                                    -DCMAKE_PREFIX_PATH=${SB_INITIAL_DESTDIR}${CMAKE_INSTALL_PREFIX}
                                    -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
                                    -DCMAKE_SKIP_RPATH="${CMAKE_SKIP_RPATH}"
                                    -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
                                    -DLIB_SUFFIX=${LIB_SUFFIX}
-                        STEP_TARGETS update
+                                   ${SB_CMAKE_ARGS}
+                                   ${SB_CMAKE_ARGS_${_name}}
+                        STEP_TARGETS update configure
                         ${DEPENDS_ARGS}
                         )
 #    externalproject_add_step(${_name}  package
@@ -123,10 +168,16 @@ macro(sb_add_project _name )
 #                             DEPENDEES build)
 #
 #    externalProject_Add_StepTargets(${_name} package)
-    if(buildFromSourcePackage)
-      install(DIRECTORY ${CMAKE_SOURCE_DIR}/${_name} DESTINATION Source )
+    if(SB_ONE_PACKAGE_PER_PROJECT)
+      set(SRC_INSTALL_DIR ".")
     else()
-      install(DIRECTORY ${CMAKE_BINARY_DIR}/Source/${_name} DESTINATION Source
+      set(SRC_INSTALL_DIR "Source")
+    endif()
+
+    if(buildFromSourcePackage)
+      install(DIRECTORY ${CMAKE_SOURCE_DIR}/${_name}  DESTINATION ${SRC_INSTALL_DIR}  COMPONENT ${_name} )
+    else()
+      install(DIRECTORY ${CMAKE_BINARY_DIR}/Source/${_name}  DESTINATION ${SRC_INSTALL_DIR}  COMPONENT ${_name}
               PATTERN .git EXCLUDE
               PATTERN .svn EXCLUDE
               PATTERN CVS EXCLUDE
@@ -135,6 +186,7 @@ macro(sb_add_project _name )
     endif()
 
 #    add_dependencies(PackageAll ${_name}-package )
+    add_dependencies(${_name} AlwaysCheckDESTDIR)
   else()
     message(STATUS "Skipping ${_name}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/Build/${_name}
@@ -147,10 +199,10 @@ macro(sb_add_project _name )
 endmacro(sb_add_project)
 
 
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/ThisIsASourcePackage "This is a generated source package.")
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/ThisIsASourcePackage.in "This is a generated source package.")
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ThisIsASourcePackage DESTINATION Source RENAME ThisIsASourcePackage.valid )
-install(FILES CMakeLists.txt DESTINATION Source )
-install(FILES ${CMAKE_CURRENT_LIST_FILE} DESTINATION . )
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ThisIsASourcePackage.in DESTINATION Source RENAME ThisIsASourcePackage.valid  COMPONENT SuperBuild )
+install(FILES CMakeLists.txt DESTINATION Source  COMPONENT SuperBuild )
+install(FILES ${CMAKE_CURRENT_LIST_FILE} DESTINATION .  COMPONENT SuperBuild )
 
 set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY TRUE)
