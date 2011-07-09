@@ -21,13 +21,13 @@ sb_add_project(Phonon   GIT_REPOSITORY git://anongit.kde.org/phonon
 #                        CMAKE_ARGS -DPHONON_MKSPECS_DIR=share/qt4/mkspecs/modules -DPHONON_QT_PLUGIN_INSTALL_DIR=lib/qt4/plugins/designer/
                         DEPENDS Automoc4)
 
-sb_add_project(Phonon-GStreamer GIT_REPOSITORY git://anongit.kde.org/phonon-gstreamer )
-sb_add_project(Phonon-MMF       GIT_REPOSITORY git://anongit.kde.org/phonon-mmf )
+sb_add_project(Phonon-GStreamer GIT_REPOSITORY git://anongit.kde.org/phonon-gstreamer DEPENDS Phonon)
+#sb_add_project(Phonon-MMF       GIT_REPOSITORY git://anongit.kde.org/phonon-mmf  DEPENDS Phonon)
 sb_add_project(Phonon-MPlayer   GIT_REPOSITORY git://anongit.kde.org/phonon-mplayer )
 sb_add_project(Phonon-VLC       GIT_REPOSITORY git://anongit.kde.org/phonon-vlc DEPENDS Phonon Automoc4)
 
-sb_add_project(Phonon-WaveOut   GIT_REPOSITORY git://anongit.kde.org/phonon-waveout )
-sb_add_project(Phonon-Xine      GIT_REPOSITORY git://anongit.kde.org/phonon-xine )
+#sb_add_project(Phonon-WaveOut   GIT_REPOSITORY git://anongit.kde.org/phonon-waveout DEPENDS Phonon)
+sb_add_project(Phonon-Xine      GIT_REPOSITORY git://anongit.kde.org/phonon-xine  DEPENDS Phonon)
 
 if(WIN32)
    sb_add_project(Phonon-DirectShow      GIT_REPOSITORY git://anongit.kde.org/phonon-directshow )
