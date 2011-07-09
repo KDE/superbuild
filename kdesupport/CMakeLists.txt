@@ -37,6 +37,12 @@ if(APPLE)
    sb_add_project(Phonon-QuickTime       GIT_REPOSITORY git://anongit.kde.org/phonon-quicktime )
 endif()
 
+sb_add_project(LibStreams GIT_REPOSITORY git://anongit.kde.org/libstreams.git)
+sb_add_project(LibStreamAnalyzer GIT_REPOSITORY git://anongit.kde.org/libstreamanalyzer.git DEPENDS LibStreams)
+sb_add_project(StrigiDaemon GIT_REPOSITORY git://anongit.kde.org/strigidaemon.git DEPENDS LibStreamAnalyzer)
+sb_add_project(StrigiClient GIT_REPOSITORY git://anongit.kde.org/strigiclient.git DEPENDS LibStreamAnalyzer StrigiDaemon)
+sb_add_project(StrigiUtils GIT_REPOSITORY git://anongit.kde.org/strigiutils.git DEPENDS LibStreamAnalyzer)
+
 
 set(CPACK_PACKAGE_VERSION ${SB_PACKAGE_VERSION_NUMBER} )
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME} )
