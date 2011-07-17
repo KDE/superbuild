@@ -12,6 +12,8 @@ sb_add_project(Akonadi  GIT_REPOSITORY git://anongit.kde.org/akonadi )
 sb_add_project(Attica   GIT_REPOSITORY git://anongit.kde.org/attica DEPENDS Automoc4 )
 sb_add_project(Cagibi   GIT_REPOSITORY git://anongit.kde.org/cagibi DEPENDS Automoc4 )
 
+sb_add_project(Grantlee GIT_REPOSITORY git://gitorious.org/grantlee/grantlee.git)
+
 sb_add_project(Prison   GIT_REPOSITORY git://anongit.kde.org/prison )
 sb_add_project(PolKitQt GIT_REPOSITORY git://anongit.kde.org/polkit-qt-1 DEPENDS Automoc4)
 
