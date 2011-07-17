@@ -25,7 +25,8 @@ sb_add_project(Phonon   GIT_REPOSITORY git://anongit.kde.org/phonon
 
 sb_add_project(Phonon-GStreamer GIT_REPOSITORY git://anongit.kde.org/phonon-gstreamer DEPENDS Phonon)
 #sb_add_project(Phonon-MMF       GIT_REPOSITORY git://anongit.kde.org/phonon-mmf  DEPENDS Phonon)
-sb_add_project(Phonon-MPlayer   GIT_REPOSITORY git://anongit.kde.org/phonon-mplayer )
+#Phonon-MPlayer is currently unmaintained
+#sb_add_project(Phonon-MPlayer   GIT_REPOSITORY git://anongit.kde.org/phonon-mplayer )
 sb_add_project(Phonon-VLC       GIT_REPOSITORY git://anongit.kde.org/phonon-vlc DEPENDS Phonon Automoc4)
 
 #sb_add_project(Phonon-WaveOut   GIT_REPOSITORY git://anongit.kde.org/phonon-waveout DEPENDS Phonon)
