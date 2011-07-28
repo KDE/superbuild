@@ -30,7 +30,8 @@ sb_add_project(Phonon-GStreamer GIT_REPOSITORY git://anongit.kde.org/phonon-gstr
 sb_add_project(Phonon-VLC       GIT_REPOSITORY git://anongit.kde.org/phonon-vlc DEPENDS Phonon Automoc4)
 
 #sb_add_project(Phonon-WaveOut   GIT_REPOSITORY git://anongit.kde.org/phonon-waveout DEPENDS Phonon)
-sb_add_project(Phonon-Xine      GIT_REPOSITORY git://anongit.kde.org/phonon-xine  DEPENDS Phonon)
+#Phonon-Xine is deprecated and unmaintained.
+#sb_add_project(Phonon-Xine      GIT_REPOSITORY git://anongit.kde.org/phonon-xine  DEPENDS Phonon)
 
 if(WIN32)
    sb_add_project(Phonon-DirectShow      GIT_REPOSITORY git://anongit.kde.org/phonon-directshow )
