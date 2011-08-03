@@ -8,7 +8,9 @@ include(../SuperBuild.cmake)
 
 sb_add_project(Automoc4 GIT_REPOSITORY git://anongit.kde.org/automoc )
 
-sb_add_project(Akonadi  GIT_REPOSITORY git://anongit.kde.org/akonadi )
+sb_add_project(Soprano  GIT_REPOSITORY git://anongit.kde.org/soprano DEPENDS Automoc4)
+
+sb_add_project(Akonadi  GIT_REPOSITORY git://anongit.kde.org/akonadi DEPENDS Automoc4 Soprano)
 sb_add_project(Attica   GIT_REPOSITORY git://anongit.kde.org/attica DEPENDS Automoc4 )
 sb_add_project(Cagibi   GIT_REPOSITORY git://anongit.kde.org/cagibi DEPENDS Automoc4 )
 
@@ -16,8 +18,6 @@ sb_add_project(Grantlee GIT_REPOSITORY git://gitorious.org/grantlee/grantlee.git
 
 sb_add_project(Prison   GIT_REPOSITORY git://anongit.kde.org/prison )
 sb_add_project(PolKitQt GIT_REPOSITORY git://anongit.kde.org/polkit-qt-1 DEPENDS Automoc4)
-
-sb_add_project(Soprano  GIT_REPOSITORY git://anongit.kde.org/soprano )
 
 sb_add_project(Phonon   GIT_REPOSITORY git://anongit.kde.org/phonon
 #                        CMAKE_ARGS -DPHONON_MKSPECS_DIR=share/qt4/mkspecs/modules -DPHONON_QT_PLUGIN_INSTALL_DIR=lib/qt4/plugins/designer/
