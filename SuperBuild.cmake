@@ -47,8 +47,12 @@ set(SB_PACKAGE_VERSION_NUMBER "0.0.1" CACHE STRING "The version number for the s
 
 set(SB_CMAKE_ARGS "" CACHE STRING "Additional arguments to CMake which will be used for all subprojects (e.g. \"-DFOO=Bar\"). For per-project arguments variables SB_CMAKE_ARGS_<ProjectName> can be defined.")
 
-
-include(SuperBuildOptions.cmake OPTIONAL)
+# this file (SuperBuild.cmake) is systematically included from on of the child directories
+# where some CMakeLists.txt state include(../SuperBuild.cmake). So the current directory is
+# located in a subfolder of this include file. That's why global SuperBuildOptions.cmake should
+# be included from ../ (e.g. the parent directory)
+#message(STATUS ${CMAKE_CURRENT_SOURCE_DIR})
+include(../SuperBuildOptions.cmake )
 
 # Try to handle DESTDIR.
 # We install during the build, and if DESTDIR is set, the install will go there.
