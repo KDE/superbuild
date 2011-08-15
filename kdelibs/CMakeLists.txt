@@ -5,6 +5,9 @@ find_package(Qt4 REQUIRED)
 
 include (../SuperBuild.cmake)
 
+#for now kdelibs master is frozen, so we rely on the kdelibs 5.7 branch
+set(SB_GIT_TAG_kdelibs "KDE/4.7")
+
 sb_add_project(kdelibs  GIT_REPOSITORY git://anongit.kde.org/kdelibs )
 
 set(CPACK_PACKAGE_VERSION ${SB_PACKAGE_VERSION_NUMBER})
