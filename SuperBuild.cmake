@@ -52,7 +52,7 @@ set(SB_CMAKE_ARGS "" CACHE STRING "Additional arguments to CMake which will be u
 # located in a subfolder of this include file. That's why global SuperBuildOptions.cmake should
 # be included from ../ (e.g. the parent directory)
 #message(STATUS ${CMAKE_CURRENT_SOURCE_DIR})
-include(../SuperBuildOptions.cmake )
+include(../SuperBuildOptions.cmake OPTIONAL )
 
 # Try to handle DESTDIR.
 # We install during the build, and if DESTDIR is set, the install will go there.
