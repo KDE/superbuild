@@ -20,6 +20,7 @@ kdebase \
 kdeedu \
 kdegraphics \
 kdeplasma-addons \
+kdeutils \
 kdebindings \
 "
 
