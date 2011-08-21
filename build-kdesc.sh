@@ -17,6 +17,7 @@ kdepimlibs \
 kdepim \
 kdepim-runtime \
 kdebase \
+kdeaccessibility \
 kdeedu \
 kdegraphics \
 kdeplasma-addons \
