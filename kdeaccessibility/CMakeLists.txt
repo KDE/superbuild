@@ -5,10 +5,6 @@ find_package(Qt4 REQUIRED)
 
 include (../SuperBuild.cmake)
 
-# Provide extra cache entries for those subprojects which don't use the KDE/x.y naming scheme for their release branches:
-#set(SB_GIT_TAG_Okular master CACHE STRING "The git tag to use for Okular. Okular uses currently (June 2011) \"x.y\" names for its KDE SC release branches instead of \"KDE/x.y\", as most other repositories do.")
-#set(SB_GIT_TAG_MobiPocket master CACHE STRING "The git tag to use for MobiPocket. MobiPocket uses currently (June 2011) \"x.y\" names for its KDE SC release branches instead of \"KDE/x.y\", as most other repositories do.")
-
 sb_add_project(jovie       GIT_REPOSITORY git://anongit.kde.org/jovie )
 sb_add_project(kaccessible GIT_REPOSITORY git://anongit.kde.org/kaccessible )
 sb_add_project(kmag        GIT_REPOSITORY git://anongit.kde.org/kmag )
