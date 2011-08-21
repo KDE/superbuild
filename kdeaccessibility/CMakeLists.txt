@@ -5,11 +5,11 @@ find_package(Qt4 REQUIRED)
 
 include (../SuperBuild.cmake)
 
-sb_add_project(jovie       GIT_REPOSITORY git://anongit.kde.org/jovie )
-sb_add_project(kaccessible GIT_REPOSITORY git://anongit.kde.org/kaccessible )
-sb_add_project(kmag        GIT_REPOSITORY git://anongit.kde.org/kmag )
-sb_add_project(kmousetool  GIT_REPOSITORY git://anongit.kde.org/kmousetool)
-sb_add_project(kmouth      GIT_REPOSITORY git://anongit.kde.org/kmouth )
+sb_add_project(jovie       GIT_REPOSITORY ${SB_GIT_URL}jovie )
+sb_add_project(kaccessible GIT_REPOSITORY ${SB_GIT_URL}kaccessible )
+sb_add_project(kmag        GIT_REPOSITORY ${SB_GIT_URL}kmag )
+sb_add_project(kmousetool  GIT_REPOSITORY ${SB_GIT_URL}kmousetool)
+sb_add_project(kmouth      GIT_REPOSITORY ${SB_GIT_URL}kmouth )
 
 set(CPACK_PACKAGE_VERSION ${SB_PACKAGE_VERSION_NUMBER})
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME} )

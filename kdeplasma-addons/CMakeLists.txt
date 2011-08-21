@@ -5,7 +5,7 @@ find_package(Qt4 REQUIRED)
 
 include (../SuperBuild.cmake)
 
-sb_add_project(kdeplasma-addons  GIT_REPOSITORY git://anongit.kde.org/kdeplasma-addons)
+sb_add_project(kdeplasma-addons  GIT_REPOSITORY ${SB_GIT_URL}kdeplasma-addons)
 
 set(CPACK_PACKAGE_VERSION ${SB_PACKAGE_VERSION_NUMBER})
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME} )

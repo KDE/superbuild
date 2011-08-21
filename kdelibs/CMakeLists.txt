@@ -8,7 +8,7 @@ include (../SuperBuild.cmake)
 #for now kdelibs master is frozen, so we rely on the kdelibs 4.7 branch
 set(SB_GIT_TAG_kdelibs "KDE/4.7")
 
-sb_add_project(kdelibs  GIT_REPOSITORY git://anongit.kde.org/kdelibs )
+sb_add_project(kdelibs  GIT_REPOSITORY ${SB_GIT_URL}kdelibs )
 
 set(CPACK_PACKAGE_VERSION ${SB_PACKAGE_VERSION_NUMBER})
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME} )

@@ -41,13 +41,16 @@ set(CPACK_ARCHIVE_COMPONENT_INSTALL ${SB_ONE_PACKAGE_PER_PROJECT})
 
 # This is the git tag from which will be cloned. It is in the cache so it can be modified for releases etc.
 # It can be overriden for each subproject by providing a SB_GIT_TAG_<ProjectName> variable.
-set(SB_GIT_TAG "master" CACHE STRING "The default git tag to use for cloning all subprojects. It can be overridden for each subproject by providing a SB_GIT_TAG_<ProjectName> variable.")
+set(SB_GIT_TAG "master" CACHE STRING "The default git tag to use for cloning all subprojects. It can be overridden for each subproject by providing an SB_GIT_TAG_<ProjectName> variable.")
+
+# This is the git url from which will be cloned. It is in the cache so it can be modified for releases etc.
+set(SB_GIT_URL "git://anongit.kde.org/" CACHE STRING "The default git url to use for cloning all subprojects.")
 
 set(SB_PACKAGE_VERSION_NUMBER "0.0.1" CACHE STRING "The version number for the source package.")
 
 set(SB_CMAKE_ARGS "" CACHE STRING "Additional arguments to CMake which will be used for all subprojects (e.g. \"-DFOO=Bar\"). For per-project arguments variables SB_CMAKE_ARGS_<ProjectName> can be defined.")
 
-# this file (SuperBuild.cmake) is systematically included from on of the child directories
+# this file (SuperBuild.cmake) is systematically included from one of the child directories
 # where some CMakeLists.txt state include(../SuperBuild.cmake). So the current directory is
 # located in a subfolder of this include file. That's why global SuperBuildOptions.cmake should
 # be included from ../ (e.g. the parent directory)
