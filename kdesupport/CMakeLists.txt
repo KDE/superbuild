@@ -48,6 +48,7 @@ sb_add_project(StrigiClient GIT_REPOSITORY ${SB_GIT_URL}strigiclient.git DEPENDS
 sb_add_project(StrigiUtils GIT_REPOSITORY ${SB_GIT_URL}strigiutils.git DEPENDS LibStreamAnalyzer)
 
 sb_add_project(qimageblitz SVN_REPOSITORY svn://anonsvn.kde.org/home/kde/trunk/kdesupport/qimageblitz DEPENDS Automoc4)
+sb_add_project(qca SVN_REPOSITORY svn://anonsvn.kde.org/home/kde/trunk/kdesupport/qca DEPENDS Automoc4)
 
 set(CPACK_PACKAGE_VERSION ${SB_PACKAGE_VERSION_NUMBER} )
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME} )
