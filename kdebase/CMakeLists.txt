@@ -15,6 +15,8 @@ sb_add_project(kde-baseapps  GIT_REPOSITORY ${SB_GIT_URL}kde-baseapps )
 sb_add_project(kde-workspace GIT_REPOSITORY ${SB_GIT_URL}kde-workspace )
 sb_add_project(kate          GIT_REPOSITORY ${SB_GIT_URL}kate )
 
+sb_add_project(kdemultimedia SVN_REPOSITORY svn://anonsvn.kde.org/home/kde/trunk/KDE/kdemultimedia DEPENDS automoc4)
+
 set(CPACK_PACKAGE_VERSION ${SB_PACKAGE_VERSION_NUMBER})
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME} )
 set(CPACK_SYSTEM_NAME "src")
