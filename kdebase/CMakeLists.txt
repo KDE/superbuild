@@ -9,10 +9,11 @@ include (../SuperBuild.cmake)
 #set(SB_GIT_TAG_Okular master CACHE STRING "The git tag to use for Okular. Okular uses currently (June 2011) \"x.y\" names for its KDE SC release branches instead of \"KDE/x.y\", as most other repositories do.")
 #set(SB_GIT_TAG_MobiPocket master CACHE STRING "The git tag to use for MobiPocket. MobiPocket uses currently (June 2011) \"x.y\" names for its KDE SC release branches instead of \"KDE/x.y\", as most other repositories do.")
 
+sb_add_project(kactivities   GIT_REPOSITORY ${SB_GIT_URL}kactivities )
 sb_add_project(kde-runtime   GIT_REPOSITORY ${SB_GIT_URL}kde-runtime )
 sb_add_project(konsole       GIT_REPOSITORY ${SB_GIT_URL}konsole )
 sb_add_project(kde-baseapps  GIT_REPOSITORY ${SB_GIT_URL}kde-baseapps )
-sb_add_project(kde-workspace GIT_REPOSITORY ${SB_GIT_URL}kde-workspace )
+sb_add_project(kde-workspace GIT_REPOSITORY ${SB_GIT_URL}kde-workspace DEPENDS kactivities )
 sb_add_project(kate          GIT_REPOSITORY ${SB_GIT_URL}kate )
 
 sb_add_project(kdemultimedia SVN_REPOSITORY svn://anonsvn.kde.org/home/kde/trunk/KDE/kdemultimedia DEPENDS automoc4)
