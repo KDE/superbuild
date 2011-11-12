@@ -97,25 +97,29 @@ set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 
 macro(sb_add_project _name )
 
-  if(EXISTS ${CMAKE_SOURCE_DIR}/${_name}  OR NOT buildFromSourcePackage)
-    option(BUILD_${_name} "Build subproject ${_name}" TRUE)
+  set(oneValueArgs CVS_REPOSITORY GIT_REPOSITORY SVN_REPOSITORY SOURCE_DIR SUBDIR)
+  set(multiValueArgs DEPENDS)
+  cmake_parse_arguments(_SB "" "${oneValueArgs}" "${multiValueArgs}"  ${ARGN})
+
+  set(subdir ${_name} )
+  if(_SB_SUBDIR)
+    set(subdir ${_SB_SUBDIR} )
   endif()
 
-  if (BUILD_${_name})
-    message(STATUS "Adding project ${_name}")
+  if(EXISTS ${CMAKE_SOURCE_DIR}/${subdir}  OR NOT buildFromSourcePackage)
+    option(BUILD_${subdir} "Build subproject ${_name}" FALSE)
+  endif()
 
-    set(oneValueArgs CVS_REPOSITORY GIT_REPOSITORY SVN_REPOSITORY SOURCE_DIR )
-    set(multiValueArgs DEPENDS)
-    cmake_parse_arguments(_SB "" "${oneValueArgs}" "${multiValueArgs}"  ${ARGN})
+  if (BUILD_${subdir})
 
     if(buildFromSourcePackage) # we are building an installed version of the source package
-      set(GET_SOURCES_ARGS SOURCE_DIR ${CMAKE_SOURCE_DIR}/${_name}
+      set(GET_SOURCES_ARGS SOURCE_DIR ${CMAKE_SOURCE_DIR}/${subdir}
                            DOWNLOAD_COMMAND "")
     else()
       set(GET_SOURCES_ARGS ) #DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/src/${_name}/ )
 
       if(_SB_CVS_REPOSITORY)
-        set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} CVS_REPOSITORY ${_SB_CVS_REPOSITORY} )
+        set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} CVS_REPOSITORY ${_SB_CVS_REPOSITORY} SOURCE_DIR ${CMAKE_BINARY_DIR}/src/${subdir} )
       elseif(_SB_GIT_REPOSITORY)
 
         # make it possible to override the "global" SB_GIT_TAG with a per-subproject SB_GIT_TAG_ProjectName
@@ -124,14 +128,15 @@ macro(sb_add_project _name )
           set(_SB_GIT_TAG ${SB_GIT_TAG_${_name}})
         endif()
 
-        set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} GIT_REPOSITORY ${_SB_GIT_REPOSITORY} GIT_TAG ${_SB_GIT_TAG} )
+        set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} GIT_REPOSITORY ${_SB_GIT_REPOSITORY} GIT_TAG ${_SB_GIT_TAG} SOURCE_DIR ${CMAKE_BINARY_DIR}/src/${subdir} )
       elseif(_SB_SVN_REPOSITORY)
-        set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} SVN_REPOSITORY ${_SB_SVN_REPOSITORY} )
+        set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} SVN_REPOSITORY ${_SB_SVN_REPOSITORY} SOURCE_DIR ${CMAKE_BINARY_DIR}/src/${subdir} )
       elseif(_SB_SOURCE_DIR)
         set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} SOURCE_DIR ${_SB_SOURCE_DIR} )
       endif()
     endif()
 
+    message(STATUS "Adding project ${_name} in subdir ${subdir}")
 
     set(DEPENDS_ARGS)
     if(_SB_DEPENDS)
@@ -155,9 +160,9 @@ macro(sb_add_project _name )
     externalproject_add(${_name}
                         ${_SB_UNPARSED_ARGUMENTS}
                         ${GET_SOURCES_ARGS}
-                        TMP_DIR ${CMAKE_BINARY_DIR}/CMakeFiles/SuperBuild/tmpfiles/${_name}
-                        STAMP_DIR ${CMAKE_BINARY_DIR}/CMakeFiles/SuperBuild/stampfiles/${_name}
-#                        BINARY_DIR ${CMAKE_BINARY_DIR}/build/${_name}
+                        TMP_DIR ${CMAKE_BINARY_DIR}/CMakeFiles/SuperBuild/tmpfiles/${subdir}
+                        STAMP_DIR ${CMAKE_BINARY_DIR}/CMakeFiles/SuperBuild/stampfiles/${subdir}
+                        BINARY_DIR ${CMAKE_BINARY_DIR}/build/${subdir}
                         INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
 #                        INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} -C${CMAKE_BINARY_DIR}/${_name}/build install DESTDIR=${CMAKE_BINARY_DIR}/Install
                         CMAKE_ARGS --no-warn-unused-cli
@@ -181,13 +186,13 @@ macro(sb_add_project _name )
     if(SB_ONE_PACKAGE_PER_PROJECT)
       set(SRC_INSTALL_DIR ".")
     else()
-      set(SRC_INSTALL_DIR "Source")
+      set(SRC_INSTALL_DIR "src")
     endif()
 
     if(buildFromSourcePackage)
-      install(DIRECTORY ${CMAKE_SOURCE_DIR}/${_name}  DESTINATION ${SRC_INSTALL_DIR}  COMPONENT ${_name} )
+      install(DIRECTORY ${CMAKE_SOURCE_DIR}/${subdir}  DESTINATION ${SRC_INSTALL_DIR}  COMPONENT ${_name} )
     else()
-      install(DIRECTORY ${CMAKE_BINARY_DIR}/Source/${_name}  DESTINATION ${SRC_INSTALL_DIR}  COMPONENT ${_name}
+      install(DIRECTORY ${CMAKE_BINARY_DIR}/src/${subdir}  DESTINATION ${SRC_INSTALL_DIR}  COMPONENT ${_name}
               PATTERN .git EXCLUDE
               PATTERN .svn EXCLUDE
               PATTERN CVS EXCLUDE
@@ -199,11 +204,11 @@ macro(sb_add_project _name )
     add_dependencies(${_name} AlwaysCheckDESTDIR)
   else()
     message(STATUS "Skipping ${_name}")
-    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/Build/${_name}
-                    COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/Source/${_name}
+    execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/build/${subdir}
+                    COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/src/${subdir}
                     COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/Download/${_name}
-                    COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/Stamp/${_name}
-                    COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/tmp/${_name}
+#                    COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/Stamp/${_name}
+#                    COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/tmp/${_name}
                     OUTPUT_QUIET ERROR_QUIET )
   endif()
 endmacro(sb_add_project)
@@ -211,8 +216,8 @@ endmacro(sb_add_project)
 
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/ThisIsASourcePackage.in "This is a generated source package.")
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ThisIsASourcePackage.in DESTINATION Source RENAME ThisIsASourcePackage.valid  COMPONENT SuperBuild )
-install(FILES CMakeLists.txt DESTINATION Source  COMPONENT SuperBuild )
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/ThisIsASourcePackage.in DESTINATION src RENAME ThisIsASourcePackage.valid  COMPONENT SuperBuild )
+install(FILES CMakeLists.txt DESTINATION src  COMPONENT SuperBuild )
 install(FILES ${CMAKE_CURRENT_LIST_FILE} DESTINATION .  COMPONENT SuperBuild )
 
 set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY TRUE)
