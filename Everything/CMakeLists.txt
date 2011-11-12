@@ -6,6 +6,7 @@ find_package(Qt4 REQUIRED)
 include(../SuperBuild.cmake)
 
 
+# Calligra
 sb_add_project(krita-analogies GIT_REPOSITORY git://anongit.kde.org/krita-analogies SUBDIR calligra_krita-extensions_krita-analogies
               )
 sb_add_project(krita-cimg GIT_REPOSITORY git://anongit.kde.org/krita-cimg SUBDIR calligra_krita-extensions_krita-cimg
@@ -30,6 +31,8 @@ sb_add_project(calligra GIT_REPOSITORY git://anongit.kde.org/calligra SUBDIR cal
               )
 sb_add_project(calligra-history GIT_REPOSITORY git://anongit.kde.org/calligra-history SUBDIR calligra_calligra-history
               )
+
+# Extragear
 sb_add_project(kannasaver GIT_REPOSITORY git://anongit.kde.org/kannasaver SUBDIR extragear_artwork_kannasaver
               )
 sb_add_project(bluedevil GIT_REPOSITORY git://anongit.kde.org/bluedevil SUBDIR extragear_base_bluedevil
@@ -144,12 +147,14 @@ sb_add_project(rsibreak GIT_REPOSITORY git://anongit.kde.org/rsibreak SUBDIR ext
               )
 sb_add_project(yakuake GIT_REPOSITORY git://anongit.kde.org/yakuake SUBDIR extragear_utils_yakuake
               )
-sb_add_project(kde-build-metadata GIT_REPOSITORY git://anongit.kde.org/kde-build-metadata SUBDIR kde-build-metadata_kde-build-metadata
-              )
+
+# KDE base
 sb_add_project(kate GIT_REPOSITORY git://anongit.kde.org/kate SUBDIR kde_kde-baseapps_kate
               )
 sb_add_project(konsole GIT_REPOSITORY git://anongit.kde.org/konsole SUBDIR kde_kde-baseapps_konsole
               )
+
+# KDE accessibility
 sb_add_project(jovie GIT_REPOSITORY git://anongit.kde.org/jovie SUBDIR kde_kdeaccessibility_jovie
               )
 sb_add_project(kaccessible GIT_REPOSITORY git://anongit.kde.org/kaccessible SUBDIR kde_kdeaccessibility_kaccessible
@@ -160,6 +165,8 @@ sb_add_project(kmousetool GIT_REPOSITORY git://anongit.kde.org/kmousetool SUBDIR
               )
 sb_add_project(kmouth GIT_REPOSITORY git://anongit.kde.org/kmouth SUBDIR kde_kdeaccessibility_kmouth
               )
+
+# KDE bindings
 sb_add_project(kimono GIT_REPOSITORY git://anongit.kde.org/kimono SUBDIR kde_kdebindings_csharp_kimono
               )
 sb_add_project(qyoto GIT_REPOSITORY git://anongit.kde.org/qyoto SUBDIR kde_kdebindings_csharp_qyoto
@@ -182,6 +189,8 @@ sb_add_project(kross-interpreters GIT_REPOSITORY git://anongit.kde.org/kross-int
               )
 sb_add_project(pykde4 GIT_REPOSITORY git://anongit.kde.org/pykde4 SUBDIR kde_kdebindings_pykde4
               )
+
+# KDE edu
 sb_add_project(analitza GIT_REPOSITORY git://anongit.kde.org/analitza SUBDIR kde_kdeedu_analitza
               )
 sb_add_project(blinken GIT_REPOSITORY git://anongit.kde.org/blinken SUBDIR kde_kdeedu_blinken
@@ -226,6 +235,10 @@ sb_add_project(rocs GIT_REPOSITORY git://anongit.kde.org/rocs SUBDIR kde_kdeedu_
               )
 sb_add_project(step GIT_REPOSITORY git://anongit.kde.org/step SUBDIR kde_kdeedu_step
               )
+
+# KDE graphics
+sb_add_project(kdegraphics GIT_REPOSITORY git://anongit.kde.org/kdegraphics SUBDIR kde_kdegraphics
+              )
 sb_add_project(libkdcraw GIT_REPOSITORY git://anongit.kde.org/libkdcraw SUBDIR kde_kdegraphics_libs_libkdcraw
               )
 sb_add_project(libkexiv2 GIT_REPOSITORY git://anongit.kde.org/libkexiv2 SUBDIR kde_kdegraphics_libs_libkexiv2
@@ -260,10 +273,16 @@ sb_add_project(okular GIT_REPOSITORY git://anongit.kde.org/okular SUBDIR kde_kde
               )
 sb_add_project(svgpart GIT_REPOSITORY git://anongit.kde.org/svgpart SUBDIR kde_kdegraphics_svgpart
               )
+
+# kdelibs
+sb_add_project(kdelibs GIT_REPOSITORY git://anongit.kde.org/kdelibs SUBDIR kde_kdelibs
+              )
 sb_add_project(kactivities GIT_REPOSITORY git://anongit.kde.org/kactivities SUBDIR kde_kdelibs_kactivities
               )
 sb_add_project(nepomuk-core GIT_REPOSITORY git://anongit.kde.org/nepomuk-core SUBDIR kde_kdelibs_nepomuk-core
               )
+
+# kdeutils
 sb_add_project(ark GIT_REPOSITORY git://anongit.kde.org/ark SUBDIR kde_kdeutils_ark
               )
 sb_add_project(filelight GIT_REPOSITORY git://anongit.kde.org/filelight SUBDIR kde_kdeutils_filelight
@@ -292,6 +311,8 @@ sb_add_project(superkaramba GIT_REPOSITORY git://anongit.kde.org/superkaramba SU
               )
 sb_add_project(sweeper GIT_REPOSITORY git://anongit.kde.org/sweeper SUBDIR kde_kdeutils_sweeper
               )
+
+# other modules
 sb_add_project(kde-baseapps GIT_REPOSITORY git://anongit.kde.org/kde-baseapps SUBDIR kde_kde-baseapps
               )
 sb_add_project(kde-runtime GIT_REPOSITORY git://anongit.kde.org/kde-runtime SUBDIR kde_kde-runtime
@@ -299,10 +320,6 @@ sb_add_project(kde-runtime GIT_REPOSITORY git://anongit.kde.org/kde-runtime SUBD
 sb_add_project(kde-workspace GIT_REPOSITORY git://anongit.kde.org/kde-workspace SUBDIR kde_kde-workspace
               )
 sb_add_project(kdeexamples GIT_REPOSITORY git://anongit.kde.org/kdeexamples SUBDIR kde_kdeexamples
-              )
-sb_add_project(kdegraphics GIT_REPOSITORY git://anongit.kde.org/kdegraphics SUBDIR kde_kdegraphics
-              )
-sb_add_project(kdelibs GIT_REPOSITORY git://anongit.kde.org/kdelibs SUBDIR kde_kdelibs
               )
 sb_add_project(kdepim GIT_REPOSITORY git://anongit.kde.org/kdepim SUBDIR kde_kdepim
               )
@@ -312,12 +329,12 @@ sb_add_project(kdepimlibs GIT_REPOSITORY git://anongit.kde.org/kdepimlibs SUBDIR
               )
 sb_add_project(kdeplasma-addons GIT_REPOSITORY git://anongit.kde.org/kdeplasma-addons SUBDIR kde_kdeplasma-addons
               )
-sb_add_project(superbuild GIT_REPOSITORY git://anongit.kde.org/superbuild SUBDIR kde_superbuild
-              )
 sb_add_project(kcm-grub2 GIT_REPOSITORY git://anongit.kde.org/kcm-grub2 SUBDIR kdereview_kcm-grub2
               )
 sb_add_project(ksecretservice GIT_REPOSITORY git://anongit.kde.org/ksecretservice SUBDIR kdereview_ksecretservice
               )
+
+# kdesupport
 sb_add_project(phonon GIT_REPOSITORY git://anongit.kde.org/phonon SUBDIR kdesupport_phonon_phonon
               )
 sb_add_project(phonon-directshow GIT_REPOSITORY git://anongit.kde.org/phonon-directshow SUBDIR kdesupport_phonon_phonon-directshow
@@ -376,10 +393,14 @@ sb_add_project(prison GIT_REPOSITORY git://anongit.kde.org/prison SUBDIR kdesupp
               )
 sb_add_project(soprano GIT_REPOSITORY git://anongit.kde.org/soprano SUBDIR kdesupport_soprano
               )
+
+# koffice
 sb_add_project(koffice GIT_REPOSITORY git://anongit.kde.org/koffice SUBDIR koffice_koffice
               )
 sb_add_project(koffice-plugins GIT_REPOSITORY git://anongit.kde.org/koffice-plugins SUBDIR koffice_koffice-plugins
               )
+
+# KDE playground
 sb_add_project(dekorator GIT_REPOSITORY git://anongit.kde.org/dekorator SUBDIR playground_artwork_dekorator
               )
 sb_add_project(oxygen-gtk GIT_REPOSITORY git://anongit.kde.org/oxygen-gtk SUBDIR playground_artwork_oxygen-gtk
@@ -624,6 +645,8 @@ sb_add_project(synchrotron GIT_REPOSITORY git://anongit.kde.org/synchrotron SUBD
               )
 sb_add_project(synchrotron-sources GIT_REPOSITORY git://anongit.kde.org/synchrotron-sources SUBDIR playground_www_synchrotron-sources
               )
+
+# Qt
 sb_add_project(qt GIT_REPOSITORY git://anongit.kde.org/qt SUBDIR qt_qt
               )
 
