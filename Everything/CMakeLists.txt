@@ -5,6 +5,14 @@ find_package(Qt4 REQUIRED)
 
 include(../SuperBuild.cmake)
 
+# still in svn:
+sb_add_project(kdegames      SVN_REPOSITORY svn://anonsvn.kde.org/home/kde/trunk/KDE/kdegames )
+sb_add_project(kdeadmin      SVN_REPOSITORY svn://anonsvn.kde.org/home/kde/trunk/KDE/kdeadmin )
+sb_add_project(kdemultimedia SVN_REPOSITORY svn://anonsvn.kde.org/home/kde/trunk/KDE/kdemultimedia )
+sb_add_project(kdenetwork    SVN_REPOSITORY svn://anonsvn.kde.org/home/kde/trunk/KDE/kdenetwork )
+sb_add_project(kdesdk        SVN_REPOSITORY svn://anonsvn.kde.org/home/kde/trunk/KDE/kdesdk )
+sb_add_project(kdetoys       SVN_REPOSITORY svn://anonsvn.kde.org/home/kde/trunk/KDE/kdetoys )
+sb_add_project(kdewebdev     SVN_REPOSITORY svn://anonsvn.kde.org/home/kde/trunk/KDE/kdewebdev )
 
 # Calligra
 sb_add_project(krita-analogies GIT_REPOSITORY git://anongit.kde.org/krita-analogies SUBDIR calligra_krita-extensions_krita-analogies
