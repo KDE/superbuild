@@ -51,6 +51,8 @@ set(SB_PACKAGE_VERSION_NUMBER "0.0.1" CACHE STRING "The version number for the s
 
 set(SB_CMAKE_ARGS "" CACHE STRING "Additional arguments to CMake which will be used for all subprojects (e.g. \"-DFOO=Bar\"). For per-project arguments variables SB_CMAKE_ARGS_<ProjectName> can be defined.")
 
+set(SB_SILENT_SKIPPED_PROJECTS FALSE)
+
 # this file (SuperBuild.cmake) is systematically included from one of the child directories
 # where some CMakeLists.txt state include(../SuperBuild.cmake). So the current directory is
 # located in a subfolder of this include file. That's why global SuperBuildOptions.cmake should
@@ -204,7 +206,10 @@ macro(sb_add_project _name )
 #    add_dependencies(PackageAll ${_name}-package )
     add_dependencies(${_name} AlwaysCheckDESTDIR)
   else()
-    message(STATUS "Skipping ${_name}")
+    if(NOT SB_SILENT_SKIPPED_PROJECTS)
+      message(STATUS "Skipping ${_name}")
+    endif()
+    list(APPEND _SB_SKIPPED_PROJECTS ${_name} )
     execute_process(COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/build/${subdir}
                     COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/src/${subdir}
                     COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/Download/${_name}
@@ -213,6 +218,11 @@ macro(sb_add_project _name )
                     OUTPUT_QUIET ERROR_QUIET )
   endif()
 endmacro(sb_add_project)
+
+
+function(sb_print_skipped_projects)
+  message(STATUS "Skipped projects: ${_SB_SKIPPED_PROJECTS}" )
+endfunction()
 
 
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/ThisIsASourcePackage.in "This is a generated source package.")

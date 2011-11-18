@@ -5,6 +5,7 @@ find_package(Qt4 REQUIRED)
 
 include(../SuperBuild.cmake)
 
+set(SB_SILENT_SKIPPED_PROJECTS TRUE)
 
 # Qt
 sb_add_project(qt GIT_REPOSITORY git://anongit.kde.org/qt SUBDIR qt_qt
@@ -675,6 +676,7 @@ sb_add_project(synchrotron GIT_REPOSITORY git://anongit.kde.org/synchrotron SUBD
 sb_add_project(synchrotron-sources GIT_REPOSITORY git://anongit.kde.org/synchrotron-sources SUBDIR playground_www_synchrotron-sources
               )
 
+sb_print_skipped_projects()
 
 set(CPACK_PACKAGE_VERSION ${SB_PACKAGE_VERSION_NUMBER} )
 set(CPACK_PACKAGE_NAME ${PROJECT_NAME} )
