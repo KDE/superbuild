@@ -32,6 +32,7 @@ endif()
 
 #add_custom_target(PackageAll)
 
+find_package(Git)
 include(ExternalProject)
 include(CMakeParseArguments)
 
@@ -128,7 +129,7 @@ macro(sb_add_project _name )
           set(_SB_GIT_TAG ${SB_GIT_TAG_${_name}})
         endif()
 
-        set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} GIT_REPOSITORY ${_SB_GIT_REPOSITORY} GIT_TAG ${_SB_GIT_TAG} SOURCE_DIR ${CMAKE_BINARY_DIR}/src/${subdir} )
+        set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} UPDATE_COMMAND ${GIT_EXECUTABLE} pull GIT_REPOSITORY ${_SB_GIT_REPOSITORY} GIT_TAG ${_SB_GIT_TAG} SOURCE_DIR ${CMAKE_BINARY_DIR}/src/${subdir} )
       elseif(_SB_SVN_REPOSITORY)
         set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} SVN_REPOSITORY ${_SB_SVN_REPOSITORY} SOURCE_DIR ${CMAKE_BINARY_DIR}/src/${subdir} )
       elseif(_SB_SOURCE_DIR)
