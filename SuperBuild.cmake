@@ -91,6 +91,15 @@ if(SB_INITIAL_DESTDIR)
   endif()
 endif()
 
+#
+# SB_SRC_CLONE_DIR variable controls the location of the sources retrieved by "git clone" or "svn co" commands
+# The default, defined here, is to have this inside the build directory
+# If you're frequently working on the sources, then you'll want to have all of them inside a separate directory.
+# In this cas, define SB_SRC_CLONE_DIR in the GlobalSuperBuildOptions.cmake file and superbuild will use that value
+#
+if(NOT DEFINED SB_SRC_CLONE_DIR)
+    set(SB_SRC_CLONE_DIR ${CMAKE_BINARY_DIR}/src)
+endif()
 
 # set up directory structure to use for the ExternalProjects
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
@@ -131,9 +140,9 @@ macro(sb_add_project _name )
           set(_SB_GIT_TAG ${SB_GIT_TAG_${_name}})
         endif()
 
-        set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} UPDATE_COMMAND ${GIT_EXECUTABLE} pull GIT_REPOSITORY ${_SB_GIT_REPOSITORY} GIT_TAG ${_SB_GIT_TAG} SOURCE_DIR ${CMAKE_BINARY_DIR}/src/${subdir} )
+        set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} UPDATE_COMMAND ${GIT_EXECUTABLE} pull GIT_REPOSITORY ${_SB_GIT_REPOSITORY} GIT_TAG ${_SB_GIT_TAG} SOURCE_DIR ${SB_SRC_CLONE_DIR}/${subdir} )
       elseif(_SB_SVN_REPOSITORY)
-        set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} SVN_REPOSITORY ${_SB_SVN_REPOSITORY} SOURCE_DIR ${CMAKE_BINARY_DIR}/src/${subdir} )
+        set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} SVN_REPOSITORY ${_SB_SVN_REPOSITORY} SOURCE_DIR ${SB_SRC_CLONE_DIR}/src/${subdir} )
       elseif(_SB_SOURCE_DIR)
         set(GET_SOURCES_ARGS ${GET_SOURCES_ARGS} SOURCE_DIR ${_SB_SOURCE_DIR} )
       endif()
