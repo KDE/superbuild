@@ -9,7 +9,9 @@ include(../SuperBuild.cmake)
 sb_add_project(libgcal GIT_REPOSITORY git://gitorious.org/libgcal/libgcal.git)
 
 # extragear projects
-sb_add_project(networkmanagement  GIT_REPOSITORY ${SB_GIT_URL}networkmanagement )
+sb_add_project(QtModemManager GIT_REPOSITORY ${SB_GIT_URL}libmm-qt )
+sb_add_project(QtNetworkManager GIT_REPOSITORY ${SB_GIT_URL}libnm-qt )
+sb_add_project(networkmanagement  GIT_REPOSITORY ${SB_GIT_URL}networkmanagement DEPENDS QtModemManager QtNetworkManager )
 sb_add_project(polkit-kde-agent-1  GIT_REPOSITORY ${SB_GIT_URL}polkit-kde-agent-1 )
 sb_add_project(polkit-kde-kcmodules-1  GIT_REPOSITORY ${SB_GIT_URL}polkit-kde-kcmodules-1 )
 sb_add_project(kipi-plugins GIT_REPOSITORY ${SB_GIT_URL}kipi-plugins )
